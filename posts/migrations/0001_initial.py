@@ -18,8 +18,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('title', models.CharField(max_length=120)),
-                ('content', models.TextField()),
-                ('updated', models.TimeField(auto_now=True)),
+                ('content', models.DateTimeField()),
+                ('updated', models.DateTimeField(auto_now=True)),
                 ('timestamp', models.TimeField(auto_now_add=True)),
             ],
         ),
