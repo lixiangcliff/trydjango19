@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.http import HttpResponse, HttpResponsePermanentRedirect
 from django.shortcuts import render, get_object_or_404
 
@@ -11,7 +12,10 @@ def post_create(request):
     if form.is_valid():
         instance = form.save(commit=False)
         instance.save()
+        messages.success(request, "Post Successfully Created!")
         return HttpResponsePermanentRedirect(instance.get_absolute_url())
+    elif form.errors:
+        messages.error(request, "Post NOT Successfully Created!")
     context = {
         "form": form
     }
@@ -36,13 +40,16 @@ def post_list(request):
     return render(request, "index.html", context)
 
 
-def post_update(request, id):
+def post_update(request, id=None):
     instance = get_object_or_404(Post, id=id)
     form = PostForm(request.POST or None, instance=instance)
     if form.is_valid():
         instance = form.save(commit=False)
         instance.save()
+        messages.success(request, "Post Successfully Updated!")
         return HttpResponsePermanentRedirect(instance.get_absolute_url())
+    elif form.errors:
+        messages.error(request, "Post NOT Successfully Updated!")
     context = {
         "title": instance.title,
         "instance": instance,
