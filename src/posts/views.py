@@ -28,6 +28,9 @@ def post_create(request):
 
 def post_detail(request, slug):
     instance = get_object_or_404(Post, slug=slug)
+    if instance.draft:
+        if not (request.user.is_staff or request.user.is_superuser):
+            raise Http404
     context = {
         "title": instance.title,
         "instance": instance
@@ -36,7 +39,9 @@ def post_detail(request, slug):
 
 
 def post_list(request):
-    queryset_list = Post.objects.all()  # .order_by('-timestamp')
+    queryset_list = Post.objects.active()  # .order_by('-timestamp')
+    if request.user.is_staff or request.user.is_superuser:
+        queryset_list = Post.objects.all()
     paginator = Paginator(queryset_list, 5)  # Show 25 contacts per page
     page_request_var = 'page'
     page = request.GET.get(page_request_var)

@@ -10,6 +10,11 @@ from django.utils.text import slugify
 # Create your models here.
 
 
+class PostManager(models.Manager):
+    def active(self, *args, **kwargs):
+        return super(PostManager, self).filter(draft=False)
+
+
 def upload_location(instance, filename):
     PostModel = instance.__class__
     new_id = PostModel.objects.order_by('id').last().id + 1
@@ -29,6 +34,8 @@ class Post(models.Model):
     publish = models.DateTimeField(auto_now=False, auto_now_add=False)
     updated = models.DateTimeField(auto_now=True, auto_now_add=False)
     timestamp = models.DateTimeField(auto_now=False, auto_now_add=True)
+
+    objects = PostManager()
 
     def __unicode__(self):
         return self.title
