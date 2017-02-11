@@ -6,6 +6,7 @@ from django.db import models
 from django.db.models.signals import pre_save
 from django.utils.text import slugify
 
+
 # Create your models here.
 
 
@@ -24,6 +25,8 @@ class Post(models.Model):
     width_field = models.IntegerField(default=0)
     height_field = models.IntegerField(default=0)
     content = models.TextField()
+    draft = models.BooleanField(default=True)
+    publish = models.DateTimeField(auto_now=False, auto_now_add=False)
     updated = models.DateTimeField(auto_now=True, auto_now_add=False)
     timestamp = models.DateTimeField(auto_now=False, auto_now_add=True)
 
@@ -35,6 +38,9 @@ class Post(models.Model):
 
     def get_absolute_url(self):
         return reverse("posts:detail", kwargs={"slug": self.slug})
+
+    def get_absolute_url_edit(self):
+        return reverse("posts:update", kwargs={"slug": self.slug})
 
     class Meta:
         ordering = ["-timestamp", "-updated"]
